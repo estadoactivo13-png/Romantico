@@ -115,6 +115,13 @@
 
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
         @keyframes floating { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+   
+    
+    #musica {
+    display: none;  /* o visibility: hidden; */
+}
+    
+    
     </style>
 </head>
 <body>
@@ -169,9 +176,9 @@
         </div>
     </div>
 
-   <audio id="musica" loop controls>
-    <source src="/oroclick99.mp4" type="audio/mpeg">
-    Tu navegador no soporta el elemento audio.
+  <audio id="musica" loop>
+    <source src="/oroclick99.mp4" type="audio/mpeg">  <!-- o "musica.mp3" si misma carpeta -->
+    Tu navegador no soporta audio.
 </audio>
 
     <script>
