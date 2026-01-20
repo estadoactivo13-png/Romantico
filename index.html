@@ -25,16 +25,16 @@
             background-color: #000;
         }
 
+        /* --- 1. FONDO (CAMBIAR AQUÍ) --- */
         .bg-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
-                        url('https://images.unsplash.com/photo-1516589174184-c6852657d403?q=80&w=2000') no-repeat center center;
+                        url('https://images.unsplash.com/photo-1494774157365-9e04c6720e47?q=80&w=2000') no-repeat center center;
             background-size: cover;
             z-index: -1;
         }
 
-        /* DEDICATORIA */
         .dedicatoria-top {
             position: absolute;
             top: 5vh; left: 5vw;
@@ -47,6 +47,7 @@
 
         .main-content { text-align: center; color: white; z-index: 5; max-width: 800px; padding: 20px; }
 
+        /* --- 2. FOTO FLOTANTE (CAMBIAR AQUÍ) --- */
         .foto-principal {
             width: 140px; height: 140px;
             border-radius: 50%; border: 3px solid var(--oro);
@@ -68,7 +69,6 @@
             animation: pulse 2s infinite; display: none;
         }
 
-        /* MODALES */
         .modal {
             display: none; position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -85,28 +85,29 @@
         .modal-content h2 { font-family: 'Playfair Display', serif; color: var(--oro); margin-bottom: 15px; }
         .modal-content p { color: #444; font-size: 1rem; line-height: 1.6; }
 
-        /* BOTÓN PUBLICIDAD (PIE DE PÁGINA) */
         .footer-promo {
             position: fixed; bottom: 20px; width: 100%; text-align: center; z-index: 20;
         }
 
         .btn-promo {
-            background: rgba(212, 175, 55, 0.2);
+            background: rgba(255, 255, 255, 0.1);
             color: var(--oro); border: 1px solid var(--oro);
-            padding: 8px 15px; border-radius: 20px;
-            font-size: 0.8rem; cursor: pointer; text-decoration: none;
+            padding: 8px 18px; border-radius: 20px;
+            font-size: 0.75rem; cursor: pointer; text-decoration: none;
             transition: 0.3s; backdrop-filter: blur(5px);
+            letter-spacing: 1px;
         }
 
         .btn-promo:hover { background: var(--oro); color: #000; }
 
         .btn-whatsapp {
-            display: inline-block; margin-top: 20px; background: #25d366;
-            color: white; padding: 10px 20px; border-radius: 10px;
-            text-decoration: none; font-weight: bold;
+            display: inline-block; margin-top: 25px; background: #25d366;
+            color: white; padding: 12px 25px; border-radius: 30px;
+            text-decoration: none; font-weight: 600; font-size: 0.9rem;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
         }
 
-        .creditos { margin-top: 25px; font-size: 0.7rem; color: #888; border-top: 1px solid #eee; padding-top: 15px; }
+        .creditos { margin-top: 25px; font-size: 0.65rem; color: #999; border-top: 1px solid #eee; padding-top: 15px; }
 
         .close { position: absolute; top: 15px; right: 20px; font-size: 25px; cursor: pointer; color: #aaa; }
 
@@ -124,18 +125,21 @@
     </div>
 
     <div class="main-content">
-        <img src="https://images.unsplash.com/photo-1518895949257-7621c3c786d7?q=80&w=500" class="foto-principal" id="foto">
+        <img src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=500" class="foto-principal" id="foto">
+        
         <div id="areaPoema">
             <h1 id="tituloMain" style="margin-bottom: 20px;">Escanear el QR de su tarjeta</h1>
             <p class="poema" id="poemaTexto" style="display: none;">
-                "Porque los mejores detalles no se guardan en un cajón, se llevan en el alma."
+                "Hay mensajes que trascienden el papel... <br>
+                momentos que merecen ser guardados en una cápsula del tiempo <br>
+                para ser revividos una y otra vez."
             </p>
         </div>
         <button id="btnSobre" onclick="accionSobre()">💌</button>
     </div>
 
     <div class="footer-promo">
-        <button class="btn-promo" onclick="abrirPromo()">✨ Crea tu propia cápsula</button>
+        <button class="btn-promo" onclick="abrirPromo()">✨ CREA TU PROPIA CÁPSULA</button>
     </div>
 
     <div id="miModal" class="modal">
@@ -149,22 +153,23 @@
     <div id="modalPromo" class="modal">
         <div class="modal-content">
             <span class="close" onclick="cerrarPromo()">&times;</span>
-            <h2>Personaliza tu Regalo</h2>
-            <p>¿Te gustaría regalar una experiencia digital como esta? Sorprende a esa persona especial con una cápsula personalizada.</p>
+            <h2>Eleva tu detalle</h2>
+            <p>Has recibido una <b>Cápsula Esencial</b>, pero el amor no tiene límites. <br><br>¿Te gustaría crear una experiencia <b>Premium</b> totalmente personalizada con tus propias fotos, música y diseño exclusivo?</p>
             
-            <a href="https://wa.me/TUNUMERO" class="btn-whatsapp" target="_blank">Contactar por WhatsApp</a>
+            <a href="https://wa.me/56930763222" class="btn-whatsapp" target="_blank">Consultar por WhatsApp</a>
 
             <div class="creditos">
-                <p><strong>Créditos de la obra:</strong></p>
-                <p>Música: [Nombre del autor o "Creación propia"]</p>
-                <p>Imágenes: [Unsplash / Nombre del autor]</p>
-                <p>Desarrollado con ❤️ por TuNombre/Marca</p>
+                <p><strong>RECURSOS DIGITALES:</strong></p>
+                <p>Música: Colección Cinematográfica Romántica</p>
+                <p>Imágenes: Galería de Arte Unsplash</p>
+                <p>Desarrollado con pasión por <b>Andrés D.</b></p>
             </div>
         </div>
     </div>
 
     <audio id="musica" loop>
         <source src="musica.mp3" type="audio/mpeg">
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
     </audio>
 
     <script>
@@ -204,10 +209,8 @@
         }
 
         function cerrarCaja() { document.getElementById('miModal').style.display = 'none'; }
-        
         function abrirPromo() { document.getElementById('modalPromo').style.display = 'flex'; }
         function cerrarPromo() { document.getElementById('modalPromo').style.display = 'none'; }
-
         window.onload = cargarDatos;
     </script>
 </body>
