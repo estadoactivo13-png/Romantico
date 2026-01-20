@@ -78,77 +78,77 @@
         <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
     </audio>
 
-    <script>
-        const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTX9GbZ-VpQB2QgB8pkkwy4YvgN6qIqDSwvgTUmqyAVwGFqwEEK3fIPjxd09QxJtEuRXRzowvjCIEjo/pub?output=csv';
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
 
-        
+<script>
+    const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTX9GbZ-VpQB2QgB8pkkwy4YvgN6qIqDSwvgTUmqyAVwGFqwEEK3fIPjxd09QxJtEuRXRzowvjCIEjo/pub?output=csv';
 
+    async function cargarDatos() {
+        const params = new URLSearchParams(window.location.search);
+        const idBuscado = params.get('id');
 
-async function cargarDatos() {
-    const params = new URLSearchParams(window.location.search);
-    const idBuscado = params.get('id');
+        if (!idBuscado) {
+            document.getElementById('tituloMain').innerText = "Cápsula lista para configurar";
+            return;
+        }
 
-    if (!idBuscado) {
-        document.getElementById('tituloMain').innerText = "Por favor, escanea un código válido";
-        return;
+        // Usamos PapaParse para descargar y procesar el CSV automáticamente
+        Papa.parse(csvUrl, {
+            download: true,
+            header: false, // No usamos encabezados para evitar líos de nombres
+            complete: function(results) {
+                const filas = results.data;
+                
+                // Buscamos la fila donde la Columna 1 (índice 1) sea el ID
+                const fila = filas.find(f => f[1] && f[1].trim() === idBuscado.trim());
+
+                if (fila) {
+                    document.getElementById('tituloMain').innerText = "Un regalo para ti";
+                    
+                    // Orden según tu Sheet: [0]Marca, [1]ID, [2]De, [3]Mensaje, [4]Para
+                    const nombreDe = fila[2] ? fila[2].trim() : "Alguien que te quiere";
+                    const mensajeBody = fila[3] ? fila[3].trim() : "";
+                    const nombrePara = fila[4] ? fila[4].trim() : "Alguien Especial";
+
+                    document.getElementById('txtDe').innerText = nombreDe;
+                    document.getElementById('txtPara').innerText = nombrePara;
+
+                    // LÓGICA DEL MENSAJE: Solo si hay texto real
+                    if (mensajeBody.length > 0) {
+                        document.getElementById('txtMensaje').innerText = mensajeBody;
+                        document.getElementById('btnAbrir').style.display = 'inline-block';
+                    } else {
+                        // Si no hay mensaje, ocultamos el sobre y activamos música al tocar fondo
+                        document.getElementById('btnAbrir').style.display = 'none';
+                        document.body.onclick = () => {
+                            document.getElementById('musica').play();
+                            alert("¡Disfruta de tu canción!");
+                        };
+                        document.getElementById('tituloMain').innerText = "Escucha esta melodía para ti";
+                    }
+                } else {
+                    document.getElementById('tituloMain').innerText = "ID no encontrado";
+                }
+            },
+            error: function() {
+                document.getElementById('tituloMain').innerText = "Error al conectar con la base de datos";
+            }
+        });
     }
 
-    try {
-        const response = await fetch(csvUrl);
-        const csvData = await response.text();
-        
-        // Dividir filas por líneas
-        const lineas = csvData.split(/\r?\n/);
-        
-        let filaEncontrada = null;
-        for (let i = 1; i < lineas.length; i++) {
-            // Usamos una expresión regular para separar por comas PERO ignorar las comas dentro de comillas
-            const columnas = lineas[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
-            
-            if (columnas && columnas[1] && columnas[1].replace(/"/g, '').trim() === idBuscado.trim()) {
-                filaEncontrada = columnas.map(c => c.replace(/"/g, '').trim());
-                break;
-            }
-        }
-
-        if (filaEncontrada) {
-            document.getElementById('tituloMain').innerText = "Un regalo para ti";
-            
-            // Asignación según tu orden actual:
-            // [0] Marca temporal, [1] ID, [2] De, [3] Mensaje, [4] Para
-            document.getElementById('txtDe').innerText = filaEncontrada[2] || "Tu admirador";
-            document.getElementById('txtPara').innerText = filaEncontrada[4] || "Alguien Especial";
-            
-            const mensaje = filaEncontrada[3];
-            
-            if (mensaje && mensaje.length > 1) {
-                document.getElementById('txtMensaje').innerText = mensaje;
-                document.getElementById('btnAbrir').style.display = 'inline-block';
-            } else {
-                document.body.onclick = () => document.getElementById('musica').play();
-                document.getElementById('tituloMain').innerText = "Escucha nuestra canción";
-            }
-        } else {
-            document.getElementById('tituloMain').innerText = "ID no encontrado o aún no configurado";
-        }
-    } catch (e) {
-        console.error(e);
-        document.getElementById('tituloMain').innerText = "Error de conexión";
+    function abrirCaja() {
+        document.getElementById('miModal').style.display = 'flex';
+        document.getElementById('musica').play();
     }
-}
+
+    function cerrarCaja() {
+        document.getElementById('miModal').style.display = 'none';
+    }
+
+    window.onload = cargarDatos;
+</script>
 
 
 
-
-
-        function abrirCaja() {
-            document.getElementById('miModal').style.display = 'flex';
-            document.getElementById('musica').play().catch(() => console.log("Click requerido para audio"));
-        }
-
-        function cerrarCaja() { document.getElementById('miModal').style.display = 'none'; }
-
-        window.onload = cargarDatos;
-    </script>
 </body>
 </html>
