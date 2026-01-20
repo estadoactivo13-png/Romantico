@@ -85,48 +85,57 @@
 
 
 async function cargarDatos() {
-            const params = new URLSearchParams(window.location.search);
-            const idBuscado = params.get('id');
+    const params = new URLSearchParams(window.location.search);
+    const idBuscado = params.get('id');
 
-            if (!idBuscado) {
-                document.getElementById('tituloMain').innerText = "Por favor, escanea un código válido";
-                return;
-            }
+    if (!idBuscado) {
+        document.getElementById('tituloMain').innerText = "Por favor, escanea un código válido";
+        return;
+    }
 
-            try {
-                const response = await fetch(csvUrl);
-                const csvData = await response.text();
-                
-                // Dividir filas
-                const filas = csvData.split(/\r?\n/).map(row => row.split(','));
-
-                // Buscamos en la columna 1 (ID)
-                const fila = filas.find(f => f[1] && f[1].trim() === idBuscado.trim());
-
-                if (fila) {
-                    document.getElementById('tituloMain').innerText = "Un regalo para ti";
-                    
-                    // AJUSTE DE COLUMNAS SEGÚN TU NUEVO ORDEN:
-                    document.getElementById('txtDe').innerText = fila[2] || "Tu admirador"; // Columna C
-                    document.getElementById('txtPara').innerText = fila[4] || "Alguien Especial"; // Columna E
-                    
-                    const mensaje = fila[3]; // Columna D (Mensaje)
-                    
-                    if (mensaje && mensaje.trim().length > 1) {
-                        // Limpiamos comillas que a veces pone el CSV
-                        document.getElementById('txtMensaje').innerText = mensaje.replace(/"/g, '');
-                        document.getElementById('btnAbrir').style.display = 'inline-block';
-                    } else {
-                        document.body.onclick = () => document.getElementById('musica').play();
-                        document.getElementById('tituloMain').innerText = "Escucha nuestra canción";
-                    }
-                } else {
-                    document.getElementById('tituloMain').innerText = "ID no encontrado o aún no configurado";
-                }
-            } catch (e) {
-                document.getElementById('tituloMain').innerText = "Error de conexión";
+    try {
+        const response = await fetch(csvUrl);
+        const csvData = await response.text();
+        
+        // Dividir filas por líneas
+        const lineas = csvData.split(/\r?\n/);
+        
+        let filaEncontrada = null;
+        for (let i = 1; i < lineas.length; i++) {
+            // Usamos una expresión regular para separar por comas PERO ignorar las comas dentro de comillas
+            const columnas = lineas[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
+            
+            if (columnas && columnas[1] && columnas[1].replace(/"/g, '').trim() === idBuscado.trim()) {
+                filaEncontrada = columnas.map(c => c.replace(/"/g, '').trim());
+                break;
             }
         }
+
+        if (filaEncontrada) {
+            document.getElementById('tituloMain').innerText = "Un regalo para ti";
+            
+            // Asignación según tu orden actual:
+            // [0] Marca temporal, [1] ID, [2] De, [3] Mensaje, [4] Para
+            document.getElementById('txtDe').innerText = filaEncontrada[2] || "Tu admirador";
+            document.getElementById('txtPara').innerText = filaEncontrada[4] || "Alguien Especial";
+            
+            const mensaje = filaEncontrada[3];
+            
+            if (mensaje && mensaje.length > 1) {
+                document.getElementById('txtMensaje').innerText = mensaje;
+                document.getElementById('btnAbrir').style.display = 'inline-block';
+            } else {
+                document.body.onclick = () => document.getElementById('musica').play();
+                document.getElementById('tituloMain').innerText = "Escucha nuestra canción";
+            }
+        } else {
+            document.getElementById('tituloMain').innerText = "ID no encontrado o aún no configurado";
+        }
+    } catch (e) {
+        console.error(e);
+        document.getElementById('tituloMain').innerText = "Error de conexión";
+    }
+}
 
 
 
