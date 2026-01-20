@@ -3,152 +3,212 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cápsula de Amor - Vista Previa</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+    <title>Un Regalo Especial</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <style>
-        :root { --oro: #d4af37; --blanco: #ffffff; --sombra: rgba(0, 0, 0, 0.7); }
+        :root {
+            --oro: #d4af37;
+            --blanco: #ffffff;
+            --sombra: rgba(0, 0, 0, 0.8);
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Poppins', sans-serif; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #000; }
-        
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background-color: #000;
+        }
+
         .bg-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
-                        url('https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=2000') no-repeat center center;
-            background-size: cover; z-index: -1;
+                        url('https://images.unsplash.com/photo-1516589174184-c6852657d403?q=80&w=2000') no-repeat center center;
+            background-size: cover;
+            z-index: -1;
         }
 
+        /* DEDICATORIA */
         .dedicatoria-top {
-            position: absolute; top: 40px; left: 40px; text-align: left;
-            border-left: 4px solid var(--oro); padding-left: 20px;
-            text-shadow: 2px 2px 8px var(--sombra); color: white;
+            position: absolute;
+            top: 5vh; left: 5vw;
+            color: var(--blanco);
+            border-left: 3px solid var(--oro);
+            padding-left: 15px;
+            z-index: 10;
+        }
+        .dedicatoria-top span { display: block; font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--oro); }
+
+        .main-content { text-align: center; color: white; z-index: 5; max-width: 800px; padding: 20px; }
+
+        .foto-principal {
+            width: 140px; height: 140px;
+            border-radius: 50%; border: 3px solid var(--oro);
+            margin: 0 auto 20px; object-fit: cover;
+            box-shadow: 0 0 20px var(--oro);
+            animation: floating 4s ease-in-out infinite;
+            display: none;
         }
 
-        .dedicatoria-top span { display: block; font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--oro); }
+        .poema {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem; font-style: italic; margin-bottom: 25px;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.9);
+        }
 
-        .container { text-align: center; color: var(--blanco); width: 90%; }
-        h1 { font-family: 'Playfair Display', serif; font-size: 2.8rem; text-shadow: 3px 3px 10px var(--sombra); margin-bottom: 10px; }
-
-        #btnAbrir {
-            display: none; font-size: 5rem; cursor: pointer;
+        #btnSobre {
+            background: none; border: none; font-size: 4.5rem; cursor: pointer;
             filter: drop-shadow(0 0 15px var(--oro));
-            animation: pulse 2s infinite; background: none; border: none; margin-top: 20px;
+            animation: pulse 2s infinite; display: none;
         }
 
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
-
+        /* MODALES */
         .modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); backdrop-filter: blur(10px);
+            display: none; position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); backdrop-filter: blur(10px);
             z-index: 100; align-items: center; justify-content: center;
         }
 
         .modal-content {
-            background: #fff; color: #333; padding: 40px; border-radius: 25px;
-            width: 85%; max-width: 500px; text-align: center;
-            border: 6px double var(--oro); position: relative;
+            background: #fff; padding: 40px 30px; border-radius: 25px;
+            width: 85%; max-width: 450px; text-align: center;
+            border: 2px solid var(--oro); position: relative;
         }
 
-        .modal-content p { font-size: 1.2rem; line-height: 1.8; color: #444; font-style: italic; }
-        .close { position: absolute; top: 15px; right: 20px; font-size: 30px; cursor: pointer; color: #aaa; }
+        .modal-content h2 { font-family: 'Playfair Display', serif; color: var(--oro); margin-bottom: 15px; }
+        .modal-content p { color: #444; font-size: 1rem; line-height: 1.6; }
+
+        /* BOTÓN PUBLICIDAD (PIE DE PÁGINA) */
+        .footer-promo {
+            position: fixed; bottom: 20px; width: 100%; text-align: center; z-index: 20;
+        }
+
+        .btn-promo {
+            background: rgba(212, 175, 55, 0.2);
+            color: var(--oro); border: 1px solid var(--oro);
+            padding: 8px 15px; border-radius: 20px;
+            font-size: 0.8rem; cursor: pointer; text-decoration: none;
+            transition: 0.3s; backdrop-filter: blur(5px);
+        }
+
+        .btn-promo:hover { background: var(--oro); color: #000; }
+
+        .btn-whatsapp {
+            display: inline-block; margin-top: 20px; background: #25d366;
+            color: white; padding: 10px 20px; border-radius: 10px;
+            text-decoration: none; font-weight: bold;
+        }
+
+        .creditos { margin-top: 25px; font-size: 0.7rem; color: #888; border-top: 1px solid #eee; padding-top: 15px; }
+
+        .close { position: absolute; top: 15px; right: 20px; font-size: 25px; cursor: pointer; color: #aaa; }
+
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+        @keyframes floating { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
     </style>
 </head>
 <body>
 
     <div class="bg-overlay"></div>
 
-    <div class="dedicatoria-top">
+    <div class="dedicatoria-top" id="dedicatoria" style="display: none;">
         <p>PARA: <span id="txtPara">...</span></p>
         <p>DE: <span id="txtDe">...</span></p>
     </div>
 
-    <div class="container">
-        <h1 id="tituloMain">Cargando sorpresa...</h1>
-        <button id="btnAbrir" onclick="abrirCaja()">💌</button>
+    <div class="main-content">
+        <img src="https://images.unsplash.com/photo-1518895949257-7621c3c786d7?q=80&w=500" class="foto-principal" id="foto">
+        <div id="areaPoema">
+            <h1 id="tituloMain" style="margin-bottom: 20px;">Escanear el QR de su tarjeta</h1>
+            <p class="poema" id="poemaTexto" style="display: none;">
+                "Porque los mejores detalles no se guardan en un cajón, se llevan en el alma."
+            </p>
+        </div>
+        <button id="btnSobre" onclick="accionSobre()">💌</button>
+    </div>
+
+    <div class="footer-promo">
+        <button class="btn-promo" onclick="abrirPromo()">✨ Crea tu propia cápsula</button>
     </div>
 
     <div id="miModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="cerrarCaja()">&times;</span>
-            <h2 style="font-family: 'Playfair Display'; color: var(--oro); margin-bottom: 20px;">Nuestra Historia</h2>
-            <p id="txtMensaje"></p>
+            <h2>Un mensaje para ti</h2>
+            <p id="txtMensaje" style="font-style: italic;"></p>
+        </div>
+    </div>
+
+    <div id="modalPromo" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="cerrarPromo()">&times;</span>
+            <h2>Personaliza tu Regalo</h2>
+            <p>¿Te gustaría regalar una experiencia digital como esta? Sorprende a esa persona especial con una cápsula personalizada.</p>
+            
+            <a href="https://wa.me/TUNUMERO" class="btn-whatsapp" target="_blank">Contactar por WhatsApp</a>
+
+            <div class="creditos">
+                <p><strong>Créditos de la obra:</strong></p>
+                <p>Música: [Nombre del autor o "Creación propia"]</p>
+                <p>Imágenes: [Unsplash / Nombre del autor]</p>
+                <p>Desarrollado con ❤️ por TuNombre/Marca</p>
+            </div>
         </div>
     </div>
 
     <audio id="musica" loop>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+        <source src="musica.mp3" type="audio/mpeg">
     </audio>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    <script>
+        const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTX9GbZ-VpQB2QgB8pkkwy4YvgN6qIqDSwvgTUmqyAVwGFqwEEK3fIPjxd09QxJtEuRXRzowvjCIEjo/pub?output=csv';
+        let tieneMensaje = false;
+        const audio = document.getElementById('musica');
 
-<script>
-    const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTX9GbZ-VpQB2QgB8pkkwy4YvgN6qIqDSwvgTUmqyAVwGFqwEEK3fIPjxd09QxJtEuRXRzowvjCIEjo/pub?output=csv';
+        async function cargarDatos() {
+            const params = new URLSearchParams(window.location.search);
+            const idBuscado = params.get('id');
+            if (!idBuscado) return;
 
-    async function cargarDatos() {
-        const params = new URLSearchParams(window.location.search);
-        const idBuscado = params.get('id');
-
-        if (!idBuscado) {
-            document.getElementById('tituloMain').innerText = "Cápsula lista para configurar";
-            return;
+            Papa.parse(csvUrl, {
+                download: true,
+                complete: function(results) {
+                    const filas = results.data;
+                    const fila = filas.find(f => f[1] && f[1].trim() === idBuscado.trim());
+                    if (fila) {
+                        document.getElementById('tituloMain').style.display = 'none';
+                        document.getElementById('dedicatoria').style.display = 'block';
+                        document.getElementById('poemaTexto').style.display = 'block';
+                        document.getElementById('foto').style.display = 'block';
+                        document.getElementById('btnSobre').style.display = 'inline-block';
+                        document.getElementById('txtDe').innerText = fila[2] || "Alguien especial";
+                        document.getElementById('txtPara').innerText = fila[4] || "Para ti";
+                        const msg = fila[3] ? fila[3].trim() : "";
+                        if (msg.length > 0) { tieneMensaje = true; document.getElementById('txtMensaje').innerText = msg; }
+                    }
+                }
+            });
         }
 
-        // Usamos PapaParse para descargar y procesar el CSV automáticamente
-        Papa.parse(csvUrl, {
-            download: true,
-            header: false, // No usamos encabezados para evitar líos de nombres
-            complete: function(results) {
-                const filas = results.data;
-                
-                // Buscamos la fila donde la Columna 1 (índice 1) sea el ID
-                const fila = filas.find(f => f[1] && f[1].trim() === idBuscado.trim());
+        function accionSobre() {
+            if (audio.paused) audio.play();
+            else if (!tieneMensaje) audio.pause();
+            if (tieneMensaje) document.getElementById('miModal').style.display = 'flex';
+        }
 
-                if (fila) {
-                    document.getElementById('tituloMain').innerText = "Un regalo para ti";
-                    
-                    // Orden según tu Sheet: [0]Marca, [1]ID, [2]De, [3]Mensaje, [4]Para
-                    const nombreDe = fila[2] ? fila[2].trim() : "Alguien que te quiere";
-                    const mensajeBody = fila[3] ? fila[3].trim() : "";
-                    const nombrePara = fila[4] ? fila[4].trim() : "Alguien Especial";
+        function cerrarCaja() { document.getElementById('miModal').style.display = 'none'; }
+        
+        function abrirPromo() { document.getElementById('modalPromo').style.display = 'flex'; }
+        function cerrarPromo() { document.getElementById('modalPromo').style.display = 'none'; }
 
-                    document.getElementById('txtDe').innerText = nombreDe;
-                    document.getElementById('txtPara').innerText = nombrePara;
-
-                    // LÓGICA DEL MENSAJE: Solo si hay texto real
-                    if (mensajeBody.length > 0) {
-                        document.getElementById('txtMensaje').innerText = mensajeBody;
-                        document.getElementById('btnAbrir').style.display = 'inline-block';
-                    } else {
-                        // Si no hay mensaje, ocultamos el sobre y activamos música al tocar fondo
-                        document.getElementById('btnAbrir').style.display = 'none';
-                        document.body.onclick = () => {
-                            document.getElementById('musica').play();
-                            alert("¡Disfruta de tu canción!");
-                        };
-                        document.getElementById('tituloMain').innerText = "Escucha esta melodía para ti";
-                    }
-                } else {
-                    document.getElementById('tituloMain').innerText = "ID no encontrado";
-                }
-            },
-            error: function() {
-                document.getElementById('tituloMain').innerText = "Error al conectar con la base de datos";
-            }
-        });
-    }
-
-    function abrirCaja() {
-        document.getElementById('miModal').style.display = 'flex';
-        document.getElementById('musica').play();
-    }
-
-    function cerrarCaja() {
-        document.getElementById('miModal').style.display = 'none';
-    }
-
-    window.onload = cargarDatos;
-</script>
-
-
-
+        window.onload = cargarDatos;
+    </script>
 </body>
 </html>
