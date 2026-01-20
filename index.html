@@ -81,7 +81,10 @@
     <script>
         const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTX9GbZ-VpQB2QgB8pkkwy4YvgN6qIqDSwvgTUmqyAVwGFqwEEK3fIPjxd09QxJtEuRXRzowvjCIEjo/pub?output=csv';
 
-        async function cargarDatos() {
+        
+
+
+async function cargarDatos() {
             const params = new URLSearchParams(window.location.search);
             const idBuscado = params.get('id');
 
@@ -94,7 +97,7 @@
                 const response = await fetch(csvUrl);
                 const csvData = await response.text();
                 
-                // Dividir filas correctamente manejando posibles saltos de línea dentro de mensajes
+                // Dividir filas
                 const filas = csvData.split(/\r?\n/).map(row => row.split(','));
 
                 // Buscamos en la columna 1 (ID)
@@ -102,15 +105,18 @@
 
                 if (fila) {
                     document.getElementById('tituloMain').innerText = "Un regalo para ti";
-                    document.getElementById('txtPara').innerText = fila[2] || "Alguien Especial";
-                    document.getElementById('txtDe').innerText = fila[3] || "Tu admirador";
                     
-                    const mensaje = fila[4];
+                    // AJUSTE DE COLUMNAS SEGÚN TU NUEVO ORDEN:
+                    document.getElementById('txtDe').innerText = fila[2] || "Tu admirador"; // Columna C
+                    document.getElementById('txtPara').innerText = fila[4] || "Alguien Especial"; // Columna E
+                    
+                    const mensaje = fila[3]; // Columna D (Mensaje)
+                    
                     if (mensaje && mensaje.trim().length > 1) {
+                        // Limpiamos comillas que a veces pone el CSV
                         document.getElementById('txtMensaje').innerText = mensaje.replace(/"/g, '');
                         document.getElementById('btnAbrir').style.display = 'inline-block';
                     } else {
-                        // Si no hay mensaje, la música se activa al tocar la pantalla
                         document.body.onclick = () => document.getElementById('musica').play();
                         document.getElementById('tituloMain').innerText = "Escucha nuestra canción";
                     }
@@ -121,6 +127,10 @@
                 document.getElementById('tituloMain').innerText = "Error de conexión";
             }
         }
+
+
+
+
 
         function abrirCaja() {
             document.getElementById('miModal').style.display = 'flex';
